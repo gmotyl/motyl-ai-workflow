@@ -1,12 +1,83 @@
 #!/bin/bash
+
+set -e
+
 echo "🔧 Setting up Claude Code..."
 echo ""
-echo "Manual setup required. See: agents/claude-code.md"
-echo ""
-read -p "Have you installed Claude Code CLI? (y/n) " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+
+# Check if Claude Code CLI is installed
+if ! command -v claude &> /dev/null; then
+    echo "❌ Claude Code CLI not found"
+    echo ""
     echo "Install Claude Code from: https://claude.com/claude-code"
+    echo ""
+    read -p "Install now? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+    echo "Please install Claude Code and run this script again"
     exit 1
 fi
-echo "✅ Claude Code setup complete"
+
+echo "✓ Claude Code CLI found"
+echo ""
+
+# Create .claude directory structure
+mkdir -p .claude/commands
+echo "✓ Created .claude/commands/ directory"
+
+# Copy command definition files
+echo "📋 Installing command definitions..."
+for cmd in memo note question bootstrap; do
+    if [ -f "commands/${cmd}.md" ]; then
+        cp "commands/${cmd}.md" ".claude/commands/${cmd}.md"
+        echo "  ✓ ${cmd}.md"
+    fi
+done
+
+# Create .claude/settings.json if it doesn't exist
+if [ ! -f ".claude/settings.json" ]; then
+    cat > ".claude/settings.json" << 'EOFCONFIG'
+{
+  "model": "claude-opus",
+  "temperature": 0.7,
+  "max_tokens": 4096,
+  "tools": {
+    "browser": true,
+    "file_system": true,
+    "bash": true
+  },
+  "session_tracking": true,
+  "session_directory": "progress/",
+  "auto_memory": true,
+  "memory_file": "CLAUDE.md"
+}
+EOFCONFIG
+    echo "✓ Created .claude/settings.json"
+else
+    echo "✓ .claude/settings.json already exists"
+fi
+
+# Verify CLAUDE.md exists
+if [ -f "CLAUDE.md" ]; then
+    echo "✓ CLAUDE.md found (startup instructions)"
+else
+    echo "⚠️  CLAUDE.md not found (Claude won't have startup instructions)"
+fi
+
+# Verify AGENTS.md exists
+if [ -f "AGENTS.md" ]; then
+    echo "✓ AGENTS.md found (project registry)"
+else
+    echo "⚠️  AGENTS.md not found (Claude won't know about projects)"
+fi
+
+echo ""
+echo "✅ Claude Code setup complete!"
+echo ""
+echo "Next steps:"
+echo "1. Test: cd $(pwd) && claude"
+echo "2. Claude should read AGENTS.md at startup"
+echo "3. Try: /note [topic] to use commands"
+echo ""
