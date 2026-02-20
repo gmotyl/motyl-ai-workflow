@@ -62,7 +62,9 @@ if [ -z "$TEAM" ]; then
 fi
 
 # Create project structure
-mkdir -p "$PROJECT_NAME"/{notes,progress,.agent}
+mkdir -p "$PROJECT_NAME"/.agent
+mkdir -p "$PROJECT_NAME"/notes/{notes,log}
+mkdir -p "$PROJECT_NAME"/progress
 
 # Generate PROJECT.md
 cat > "$PROJECT_NAME/PROJECT.md" << EOFMD
@@ -119,14 +121,99 @@ cat > "$PROJECT_NAME/.agent/config.json" << EOFJSON
 EOFJSON
 
 # Create placeholders
-touch "$PROJECT_NAME/notes/.gitkeep"
+touch "$PROJECT_NAME/notes/notes/.gitkeep"
+touch "$PROJECT_NAME/notes/log/.gitkeep"
 touch "$PROJECT_NAME/progress/.gitkeep"
+
+# Generate Claude-specific config if using Claude
+if [ "$PROVIDER" = "claude" ]; then
+    cat > "$PROJECT_NAME/.agent/claude.md" << EOFCLAUDE
+# Claude Code Configuration for $PROJECT_NAME
+
+## Quick Reference
+
+**Resume:** \`resume $PROJECT_NAME\`
+**Session End:** Type "session end" or "end session"
+**Progress:** Stored in \`progress/\` directory
+
+## Folder Structure
+
+- \`notes/notes/\` - Session notes and decisions
+- \`notes/log/\` - Meeting transcripts (if applicable)
+- \`progress/\` - Session progress tracking (auto-created on session end)
+- \`PROJECT.md\` - Project overview
+- \`DECISIONS.md\` - Key architectural decisions
+- \`.agent/config.json\` - Provider configuration
+
+## Available Commands
+
+- \`/memo\` - Quick capture thoughts
+- \`/note\` - Process meeting transcripts
+- \`/question\` or \`/q\` - Query project knowledge
+- \`/bootstrap\` - Initialize advanced indexing
+
+## Sessions
+
+Sessions auto-track when you work. Use \`session end\` to finalize and save progress.
+
+---
+
+Auto-generated for: $PROJECT_NAME
+Type: $PROJECT_TYPE
+Created: $(date +%Y-%m-%d)
+EOFCLAUDE
+fi
 
 echo ""
 echo "✅ Project created: $PROJECT_NAME/"
 echo ""
+echo "Project structure:"
+echo "  $PROJECT_NAME/"
+echo "  ├── notes/"
+echo "  │   ├── notes/          # Session notes & decisions"
+echo "  │   └── log/            # Transcripts & logs"
+echo "  ├── progress/           # Session tracking (auto-populated)"
+echo "  ├── .agent/config.json  # Provider configuration"
+echo "  ├── PROJECT.md          # Project overview"
+echo "  └── DECISIONS.md        # Key decisions"
+echo ""
 echo "Next steps:"
 echo "1. cd $PROJECT_NAME"
 echo "2. Update PROJECT.md with your project description"
-echo "3. Start coding with your configured provider"
+if [ "$PROVIDER" = "claude" ]; then
+    echo "3. Review .agent/claude.md for Claude Code setup"
+fi
+echo ""
+echo "To register in AGENTS.md (project registry):"
+read -p "Register this project in AGENTS.md? (y/n): " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    # Add entry to AGENTS.md if it exists in parent directory
+    if [ -f "../AGENTS.md" ]; then
+        cd ..
+        echo ""
+        REPOS="$PROJECT_NAME"
+        if [ ! -z "$TEAM" ] && [ "$TEAM" != "Solo" ]; then
+            REPOS="$PROJECT_NAME (Team: $TEAM)"
+        fi
+
+        # Add to AGENTS.md
+        NEW_ENTRY="| $PROJECT_NAME | $PROJECT_TYPE | $PROVIDER | \`notes/$PROJECT_NAME/\` | git/$PROJECT_NAME |"
+
+        # Check if placeholder exists
+        if grep -q "^\| \[Add your projects here\]" AGENTS.md; then
+            sed -i '' "/^| \[Add your projects here\]/d" AGENTS.md
+        fi
+
+        # Append to table
+        echo "$NEW_ENTRY" >> AGENTS.md
+
+        echo "✅ Registered in AGENTS.md"
+        echo ""
+        cd "$PROJECT_NAME"
+    else
+        echo "⚠️  Parent AGENTS.md not found. Register manually:"
+        echo "   Run: ../scripts/register-project.sh"
+    fi
+fi
 echo ""

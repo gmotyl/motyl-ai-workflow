@@ -102,11 +102,32 @@ examples/
 
 Review these to understand the folder structure and workflow patterns.
 
+## 📋 Project Registry & Configuration
+
+This workspace uses `AGENTS.md` as a project registry so that AI agents understand your project structure.
+
+**Key files:**
+- **`AGENTS.md`** - Project registry (where your projects are listed)
+- **`CLAUDE.md`** - Claude Code configuration (auto-loaded by Claude)
+- **`docs/PROJECT-SETUP-GUIDE.md`** - Detailed setup guide
+
+When you create a project, it automatically:
+1. Creates the proper folder structure for notes and progress tracking
+2. Registers itself in `AGENTS.md` (so Claude knows about it)
+3. Generates Claude-specific config files
+
+This means commands like `resume my-project` and `/note my-project` work automatically—the agent understands your workspace structure!
+
+See [PROJECT-SETUP-GUIDE.md](docs/PROJECT-SETUP-GUIDE.md) for complete setup instructions.
+
 ## 🛠️ Quick Commands
 
 ```bash
 # Create a new project (interactive)
 npm run create-project
+
+# Register an existing project in AGENTS.md
+npm run register-project
 
 # Setup provider of choice
 npm run setup:claude-code

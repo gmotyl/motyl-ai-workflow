@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "create-project": "./scripts/create-project.sh",
+    "register-project": "./scripts/register-project.sh",
     "export-project": "./scripts/export-project-to-notebooklm.sh",
     "setup:all": "./scripts/setup:all",
     "setup:claude-code": "./scripts/setup:claude-code",
