@@ -40,7 +40,6 @@ done
 if [ ! -f ".claude/settings.json" ]; then
     cat > ".claude/settings.json" << 'EOFCONFIG'
 {
-  "model": "claude-opus",
   "temperature": 0.7,
   "max_tokens": 4096,
   "tools": {
@@ -55,6 +54,7 @@ if [ ! -f ".claude/settings.json" ]; then
 }
 EOFCONFIG
     echo "✓ Created .claude/settings.json"
+    echo "  ⚠️  Note: Use '/model' command to select your preferred model on first run"
 else
     echo "✓ .claude/settings.json already exists"
 fi

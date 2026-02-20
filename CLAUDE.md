@@ -26,6 +26,10 @@ At the beginning of each session:
 
 ## Quick Reference
 
+**First Time Setup:**
+- Run `/model` to select your preferred Claude model
+- (No hardcoded model—you choose which one to use)
+
 **Resume Usage:** `resume [project-name]` → Get project context
 
 **Built-in Claude Code Skills:**
@@ -38,6 +42,10 @@ At the beginning of each session:
 - `/note meeting-name` - Searches Quill for meetings, creates notes from minutes
 - Extract meeting context, decisions, and action items
 - Link notes back to Quill meeting IDs
+
+**Model Selection:**
+- `/model` - Select your Claude model (Opus, Sonnet, Haiku, etc.)
+- Choose based on your needs and access level
 
 **Fallback Command Scripts** (if skills unavailable):
 ```bash
