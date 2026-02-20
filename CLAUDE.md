@@ -34,12 +34,19 @@ At the beginning of each session:
 
 **Built-in Claude Code Skills:**
 - `/memo` - Quick note capture
-- `/note` - Save session notes (or create from Quill meetings)
+- `/note` - Save session notes (project-aware! checks AGENTS.md first)
 - `/question` or `/q` - Query project knowledge
 - `/bootstrap` - Initialize PROJECT.md structure
 
+**Project-Aware Note Creation:**
+- `/note my-app` - Creates note in my-app project directory (from AGENTS.md)
+- `/note my-project` - Creates note in my-project project directory
+- `/note my-topic` - Creates generic note if topic not in AGENTS.md
+- Auto-initializes directory structure if needed
+
 **Quill Integration:**
-- `/note meeting-name` - Searches Quill for meetings, creates notes from minutes
+- `/note [project-name]` - If project exists in AGENTS.md, creates note there
+- `/note [meeting-name]` - Searches Quill for meetings, creates notes from minutes
 - Extract meeting context, decisions, and action items
 - Link notes back to Quill meeting IDs
 
