@@ -133,12 +133,23 @@ See [**PROVIDER-SETUP.md**](docs/PROVIDER-SETUP.md) for:
 
 ## 🛠️ Quick Commands
 
+### Project Setup
 ```bash
 # Create a new project (interactive)
 npm run create-project
 
 # Register an existing project in AGENTS.md
 npm run register-project
+```
+
+### Commands (Slash Commands in Claude/Copilot)
+```
+/memo                    # Quick note capture
+/note topic              # Create session notes
+/note meeting-name       # Create note FROM Quill meeting minutes
+/question What is X?     # Search project knowledge
+/bootstrap              # Initialize project structure
+```
 
 # Setup provider of choice
 npm run setup:claude-code

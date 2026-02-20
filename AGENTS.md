@@ -98,8 +98,16 @@ Commands in `commands/` folder (if created). Use `/command` syntax:
 Claude Code provides these as native slash commands:
 - `/memo` - Quick capture a thought or note
 - `/note` - Process meeting transcripts or session notes
+  - **Quill Integration:** `/note meeting-name` searches Quill for meetings, creates notes from minutes
 - `/question` or `/q` - Query project knowledge base
 - `/bootstrap` - Initialize PROJECT.md and project structure
+
+### Quill Integration
+The `/note` command integrates with Quill meeting notes:
+- Search for meetings by name: `/note metro` finds "Metro" meetings in Quill
+- Extract meeting minutes and create project notes
+- Preserve meeting context and action items
+- Link notes back to original Quill meetings
 
 ### Fallback Command Scripts
 If built-in skills aren't available, use executable scripts in `commands/` folder:

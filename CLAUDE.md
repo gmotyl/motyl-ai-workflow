@@ -30,9 +30,14 @@ At the beginning of each session:
 
 **Built-in Claude Code Skills:**
 - `/memo` - Quick note capture
-- `/note` - Save session notes
+- `/note` - Save session notes (or create from Quill meetings)
 - `/question` or `/q` - Query project knowledge
 - `/bootstrap` - Initialize PROJECT.md structure
+
+**Quill Integration:**
+- `/note meeting-name` - Searches Quill for meetings, creates notes from minutes
+- Extract meeting context, decisions, and action items
+- Link notes back to Quill meeting IDs
 
 **Fallback Command Scripts** (if skills unavailable):
 ```bash
