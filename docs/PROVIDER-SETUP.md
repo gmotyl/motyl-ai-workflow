@@ -61,9 +61,10 @@ Each AI provider has its own configuration location and format. This guide shows
 
 ### `.claude/settings.json` (Technical Settings)
 
+**Note:** Do NOT hardcode a model. Run `/model` to select your preferred Claude model on first use.
+
 ```json
 {
-  "model": "claude-opus",
   "temperature": 0.7,
   "max_tokens": 4096,
   "tools": {

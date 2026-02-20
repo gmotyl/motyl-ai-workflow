@@ -10,10 +10,15 @@ node_modules/
 .env.local
 .env.*.local
 
-# Provider credentials (NEVER commit!)
+# Provider credentials & user-specific configs (NEVER commit!)
 ~/.config/kilocode/
 ~/.config/claude-code/
 ~/.config/copilot/
+.claude/
+.kilocode/
+.copilot/
+.qwen/
+.gemini/
 
 # IDE
 .vscode/
