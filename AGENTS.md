@@ -48,11 +48,11 @@ See `docs/PROVIDER-SETUP.md` for:
 ### Default Behavior (All Projects)
 
 **Commits:**
-- ⚠️ **ALWAYS ASK BEFORE COMMITTING** - Never automatic commits
-- Only commit after explicit user approval: "commit these changes" or "session end"
-- Always ask if unsure: "Ready to commit?"
-- Prevent accumulation of uncommitted changes while respecting user control
-- **CRITICAL:** Never commit to main without user consent - always ask first
+- ✅ **AUTO-COMMIT on session end** - Save progress automatically
+- Commit to current branch (user should use private branches for personal work)
+- Always push to remote for backup
+- ⚠️ **Never commit project notes to PUBLIC repositories** - Use .gitignore or private repos
+- Session progress files are safe to commit (notes/[project]/progress/)
 
 **Planning Mode:**
 - Agent enters planning mode after every session resume
@@ -75,12 +75,13 @@ When you write "session end" or "end session":
    - Results/outcomes achieved
    - Next steps or blockers discovered
    - Useful context for resuming work
-3. **ASK USER:** "Ready to commit these changes?" before committing
-   - Wait for explicit approval
-   - Only commit after "yes" / "commit" / approval
-4. **ASK USER:** "Should I add Todoist tasks?" before creating tasks
+3. **AUTO-COMMIT and PUSH** for backup
+   - Commit progress file with message: "session: [project] [date]-[description]"
+   - Push to remote (if configured)
+   - ⚠️ Only commit progress files, not full project notes (use .gitignore)
+4. **PROPOSE Todoist tasks** if something is left to do
    - Show proposed tasks in format: `[project-name] Task description`
-   - Wait for approval before adding
+   - Ask user approval: "Should I add these Todoist tasks?"
 5. Clear context and start a new session automatically
 
 ### Resume Session
