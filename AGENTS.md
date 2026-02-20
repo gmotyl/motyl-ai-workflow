@@ -48,8 +48,11 @@ See `docs/PROVIDER-SETUP.md` for:
 ### Default Behavior (All Projects)
 
 **Commits:**
-- After milestone reached ask whether to commit (Not automatic)
+- ⚠️ **ALWAYS ASK BEFORE COMMITTING** - Never automatic commits
+- Only commit after explicit user approval: "commit these changes" or "session end"
+- Always ask if unsure: "Ready to commit?"
 - Prevent accumulation of uncommitted changes while respecting user control
+- **CRITICAL:** Never commit to main without user consent - always ask first
 
 **Planning Mode:**
 - Agent enters planning mode after every session resume
@@ -72,8 +75,12 @@ When you write "session end" or "end session":
    - Results/outcomes achieved
    - Next steps or blockers discovered
    - Useful context for resuming work
-3. Commit and push to remote if configured
-4. Propose Todoist tasks if something is left to do (format: `[project-name] Task description`)
+3. **ASK USER:** "Ready to commit these changes?" before committing
+   - Wait for explicit approval
+   - Only commit after "yes" / "commit" / approval
+4. **ASK USER:** "Should I add Todoist tasks?" before creating tasks
+   - Show proposed tasks in format: `[project-name] Task description`
+   - Wait for approval before adding
 5. Clear context and start a new session automatically
 
 ### Resume Session
