@@ -240,142 +240,35 @@ Track your work sessions, resume projects, prepare standups.
 ### 6. Sound Notifications
 Get audio notifications from your AI agent (customizable per provider).
 
-## 🔄 Daily Workflow (With Session Tracking)
+## 🔄 Daily Workflow
 
-### First Time: Create & Initialize Project
+### Quick Overview
 
-```
-❯ /note landingpage
-
-⚠️  Project "landingpage" not found in AGENTS.md
-
-❓ Would you like to initialize "landingpage" as a new project?
-
-→ Yes
-
-  1. Project type? → Work
-  2. Provider? → Claude Code
-
-✅ Project "landingpage" initialized!
-   - Created: notes/landingpage/notes/, progress/, PROJECT.md
-   - Registered in AGENTS.md
-   - Ready for work
-
-[Editor opens for note editing]
+```bash
+/note landingpage          # Create/initialize project
+resume landingpage         # Resume from last session
+/memo "Quick thought"      # Capture ideas
+session end                # Save progress + auto-commit
+standup landingpage        # Prepare standup report
 ```
 
-### Morning: Start Work Session
+### Typical Session Flow
 
-```
-❯ resume landingpage
+1. **Start:** `resume [project]` - Load last session context
+2. **Work:** Use your AI agent (Claude, Kilocode, Copilot, etc.)
+3. **Note:** `/note` - Create session notes, decisions, next steps
+4. **Track:** `session end` - Automatically saves progress and commits to git
+5. **Daily:** `standup [project]` - Prepare standup summary from last 2 sessions
 
-🚀 Resume: landingpage
-  Status: Ready for Development
-  Type: Work | Provider: Claude Code
-  Last Session: 2026-02-20 - Project initialization
+### See Full Example
 
-  What would you like to work on?
-```
+For a detailed walkthrough with real output, see **[WORKFLOW-EXAMPLE.md](./docs/WORKFLOW-EXAMPLE.md)**
 
-### During Session: Create Notes & Memos
-
-```
-❯ /note landingpage
-
-✓ Found project in AGENTS.md
-✓ Creating note in notes/landingpage/notes/
-
-[Editor opens - add session notes, decisions, next steps]
-
-❯ /memo "Fixed navbar layout issue, need to review responsive design"
-
-✓ Memo saved to notes/landingpage/notes/[date]-memos.md
-```
-
-### End of Session: Save Progress
-
-```
-❯ session end
-
-✓ Reading project context from PROJECT.md
-✓ Reading AGENTS.md registry
-
-Session Summary:
-  Project: landingpage
-  Time: ~2 hours of development
-  Tasks: Navbar layout, responsive testing
-  Next: CSS optimization
-
-✓ Created: notes/landingpage/progress/2026-02-20-navbar-layout.md
-✓ Committed to git (branch main)
-
-Ready for next session!
-```
-
-### Later: Resume & Continue Work
-
-```
-❯ resume landingpage
-
-🚀 Resume: landingpage
-  Last Session (2026-02-20):
-    - ✅ Navbar layout fixed
-    - ⏳ Next: CSS optimization
-
-  Session Notes:
-    - Fixed responsive breakpoints
-    - Need to review on mobile devices
-
-  Ready to continue!
-
-❯ /note landingpage
-
-[Create today's session note]
-[Document: Tested on iPhone, added media queries]
-
-❯ session end
-
-✓ Progress tracked: notes/landingpage/progress/2026-02-21-mobile-testing.md
-✓ Session committed
-```
-
-### Next Morning: Daily Standup Prep
-
-```
-❯ standup landingpage
-
-📊 Standup Report: landingpage
-
-  ✅ What I did (yesterday):
-    - Fixed navbar layout responsive design
-    - Tested on multiple mobile devices
-    - CSS optimization in progress
-
-  🚀 What I'm doing (today):
-    - Continue CSS optimization
-    - Test on tablet sizes
-    - Performance review
-
-  🚧 Blockers:
-    - None currently
-
-  📝 Last 2 sessions:
-    1. 2026-02-21 - Mobile testing (1.5h)
-    2. 2026-02-20 - Navbar layout (2h)
-
-  📋 Open tasks: [from Todoist if integrated]
-```
-
-### Key Commands Reference
-
-| Command | Purpose | Example |
-|---------|---------|---------|
-| `/note [project]` | Create session note (auto-initializes if needed) | `/note landingpage` |
-| `/memo "text"` | Quick thought capture | `/memo "Fix navbar bug"` |
-| `resume [project]` | Load project context + last session | `resume landingpage` |
-| `session end` | Save progress + commit | `session end` |
-| `standup [project]` | Daily standup preparation | `standup landingpage` |
-| `/question` | Search project knowledge | `/question "How was navbar built?"` |
+- Complete project initialization flow
+- Multi-session workflow
+- Quill meeting integration
+- Daily standup preparation
+- Full command reference
 
 ## 🔀 Switching Providers
 
@@ -396,10 +289,18 @@ npm run setup:claude-code
 
 MIT - See [LICENSE](./LICENSE)
 
-## 👤 Author
+## 👤 Author & Support
 
 Created by Greg Motyl
-[https://github.com/motyl-ai](https://github.com/motyl-ai)
+GitHub: [https://github.com/gmotyl](https://github.com/gmotyl)
+
+### ☕ Support This Project
+
+If you find this workflow template helpful, consider supporting the public work:
+
+[☕ Buy me a coffee](https://buymeacoffee.com/motyl.dev)
+
+Your support helps maintain and improve this open-source template!
 
 ---
 
