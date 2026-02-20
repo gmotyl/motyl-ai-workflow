@@ -102,21 +102,34 @@ examples/
 
 Review these to understand the folder structure and workflow patterns.
 
-## 📋 Project Registry & Configuration
+## 📋 Project Registry & Multi-Provider Configuration
 
-This workspace uses `AGENTS.md` as a project registry so that AI agents understand your project structure.
+This workspace uses **provider-specific configuration files** so that ANY AI agent understands your project structure and how to work with it.
 
-**Key files:**
-- **`AGENTS.md`** - Project registry (where your projects are listed)
-- **`CLAUDE.md`** - Claude Code configuration (auto-loaded by Claude)
+**Core files (workspace root):**
+- **`AGENTS.md`** - Project registry + provider configuration guide
+- **`CLAUDE.md`** - Claude Code setup and commands
+- **`KILOCODE.md`** - Kilocode CLI setup and commands
+- **`COPILOT.md`** - GitHub Copilot setup and IDE integration
+- **`QWEN.md`** - QWEN/DashScope API setup
+- **`GEMINI.md`** - Google Gemini setup
 - **`docs/PROJECT-SETUP-GUIDE.md`** - Detailed setup guide
+
+**Per-project files (`.agent/` directory):**
+- **`.agent/config.json`** - Specifies which provider to use
+- **`.agent/[provider].md`** - Quick reference for that provider
 
 When you create a project, it automatically:
 1. Creates the proper folder structure for notes and progress tracking
-2. Registers itself in `AGENTS.md` (so Claude knows about it)
-3. Generates Claude-specific config files
+2. Generates the correct configuration file for your chosen provider
+3. Optionally registers in `AGENTS.md` for multi-project workspace support
 
-This means commands like `resume my-project` and `/note my-project` work automatically—the agent understands your workspace structure!
+This means commands work for **any provider**:
+- Claude: `resume my-project`, `/memo`, `/note`
+- Kilocode: `kilocode resume`, `kilocode my-project`
+- Copilot: Resume via IDE chat, `@workspace` references
+- QWEN: Load context from progress files in prompts
+- Gemini: Load context in Python/Node.js scripts
 
 See [PROJECT-SETUP-GUIDE.md](docs/PROJECT-SETUP-GUIDE.md) for complete setup instructions.
 

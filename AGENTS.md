@@ -13,6 +13,25 @@ This file defines your project registry and workflow for AI agents (Claude Code,
 | my-app | work | claude | `notes/my-app/` | git/my-app, git/my-app-backend |
 ```
 
+## Provider Configuration Files
+
+Each provider has a dedicated configuration file. When you create a project, the appropriate file is generated in `.agent/`:
+
+| Provider | Config File | Setup Command | Key Features |
+|----------|-------------|---------------|--------------|
+| **Claude Code** | `CLAUDE.md` + `.agent/claude.md` | `npm run setup:claude-code` | Resume sessions, /memo, /note, session tracking |
+| **Kilocode** | `KILOCODE.md` + `.agent/kilocode.md` | `npm run setup:kilocode-cli` | Interactive CLI, autonomous mode, multi-turn |
+| **GitHub Copilot** | `COPILOT.md` + `.agent/copilot.md` | `npm run setup:copilot` | IDE integration, code completion, chat |
+| **QWEN** | `QWEN.md` + `.agent/qwen.md` | `npm run setup:qwen` | DashScope API, multiple models, cost-effective |
+| **Google Gemini** | `GEMINI.md` + `.agent/gemini.md` | `npm run setup:gemini` | Vision models, multi-modal, image analysis |
+| **Custom** | `[provider].md` | Manual setup | Custom provider support |
+
+**How to use:**
+1. Each project's `.agent/config.json` specifies the provider
+2. Workspace root has `[PROVIDER].md` with setup and usage details
+3. Project's `.agent/[provider].md` has quick reference
+4. Generated automatically by `create-project.sh`
+
 ## Project-Specific Rules
 
 ### Default Behavior (All Projects)

@@ -125,44 +125,82 @@ touch "$PROJECT_NAME/notes/notes/.gitkeep"
 touch "$PROJECT_NAME/notes/log/.gitkeep"
 touch "$PROJECT_NAME/progress/.gitkeep"
 
-# Generate Claude-specific config if using Claude
-if [ "$PROVIDER" = "claude" ]; then
-    cat > "$PROJECT_NAME/.agent/claude.md" << EOFCLAUDE
-# Claude Code Configuration for $PROJECT_NAME
+# Generate provider-specific configuration files
+case $PROVIDER in
+    claude)
+        cat > "$PROJECT_NAME/.agent/claude.md" << 'EOFCLAUDE'
+# Claude Code Configuration
 
-## Quick Reference
+**Resume:** `resume [project-name]`
+**Session End:** Type "session end" to save progress
+**Folder:** `notes/notes/` for session notes, `progress/` for tracking
 
-**Resume:** \`resume $PROJECT_NAME\`
-**Session End:** Type "session end" or "end session"
-**Progress:** Stored in \`progress/\` directory
-
-## Folder Structure
-
-- \`notes/notes/\` - Session notes and decisions
-- \`notes/log/\` - Meeting transcripts (if applicable)
-- \`progress/\` - Session progress tracking (auto-created on session end)
-- \`PROJECT.md\` - Project overview
-- \`DECISIONS.md\` - Key architectural decisions
-- \`.agent/config.json\` - Provider configuration
-
-## Available Commands
-
-- \`/memo\` - Quick capture thoughts
-- \`/note\` - Process meeting transcripts
-- \`/question\` or \`/q\` - Query project knowledge
-- \`/bootstrap\` - Initialize advanced indexing
-
-## Sessions
-
-Sessions auto-track when you work. Use \`session end\` to finalize and save progress.
-
----
-
-Auto-generated for: $PROJECT_NAME
-Type: $PROJECT_TYPE
-Created: $(date +%Y-%m-%d)
+See the workspace root `CLAUDE.md` for complete Claude Code setup guide.
 EOFCLAUDE
-fi
+        ;;
+    kilocode)
+        cat > "$PROJECT_NAME/.agent/kilocode.md" << 'EOFKILO'
+# Kilocode CLI Configuration
+
+**Resume:** `kilocode resume` or `kilocode [project-name] resume`
+**Interactive:** `kilocode` then type commands
+**Session End:** Type "session end" to save progress
+**Folder:** `notes/notes/` for session notes, `progress/` for tracking
+
+See the workspace root `KILOCODE.md` for complete Kilocode setup guide.
+EOFKILO
+        ;;
+    copilot)
+        cat > "$PROJECT_NAME/.agent/copilot.md" << 'EOFCOPILOT'
+# GitHub Copilot Configuration
+
+**IDE:** Open project folder in VS Code, JetBrains, or Visual Studio
+**Chat:** Use IDE's Copilot Chat (Cmd+Shift+L in VS Code)
+**Resume:** Type "resume [project-name]" in chat
+**Session End:** Type "session end" in chat to save progress
+**Folder:** `notes/notes/` for session notes, `progress/` for tracking
+
+See the workspace root `COPILOT.md` for complete Copilot setup guide.
+EOFCOPILOT
+        ;;
+    qwen)
+        cat > "$PROJECT_NAME/.agent/qwen.md" << 'EOFQWEN'
+# QWEN Configuration
+
+**Setup:** export DASHSCOPE_API_KEY="your-key"
+**CLI:** `qwen-cli` for interactive mode
+**Single Prompt:** `qwen-cli "your prompt here"`
+**Session End:** Manually save progress files
+**Folder:** `notes/notes/` for session notes, `progress/` for tracking
+
+See the workspace root `QWEN.md` for complete QWEN setup guide.
+EOFQWEN
+        ;;
+    gemini)
+        cat > "$PROJECT_NAME/.agent/gemini.md" << 'EOFGEMINI'
+# Google Gemini Configuration
+
+**Setup:** export GEMINI_API_KEY="your-key"
+**Python:** Use google-generativeai client library
+**Node.js:** Use @google/generative-ai package
+**Session End:** Manually save progress files
+**Folder:** `notes/notes/` for session notes, `progress/` for tracking
+
+See the workspace root `GEMINI.md` for complete Gemini setup guide.
+EOFGEMINI
+        ;;
+    *)
+        cat > "$PROJECT_NAME/.agent/${PROVIDER}.md" << 'EOFCUSTOM'
+# Custom Provider Configuration
+
+**Provider:** $PROVIDER
+**Session End:** Manually save progress files
+**Folder:** `notes/notes/` for session notes, `progress/` for tracking
+
+Update this file with provider-specific setup instructions.
+EOFCUSTOM
+        ;;
+esac
 
 echo ""
 echo "✅ Project created: $PROJECT_NAME/"
