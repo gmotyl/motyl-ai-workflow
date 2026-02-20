@@ -1,6 +1,37 @@
-# Claude Code Commands
+# AI Agent Commands
 
-This directory contains command scripts for use with Claude Code slash commands.
+This directory contains command definitions for AI agents and CLI tools.
+
+## Command Files Structure
+
+**`.md` files** - Definitions for AI agents (Claude Code, Copilot, etc.)
+- `memo.md` - Quick note capture
+- `note.md` - Structured session notes
+- `question.md` - Project knowledge search
+- `bootstrap.md` - Project initialization
+
+**`.sh` files** - Fallback shell scripts (if CLI doesn't support `.md`)
+- `memo.sh` - Quick note shell script
+- `note.sh` - Note creation shell script
+- `question.sh` - Search shell script
+- `bootstrap.sh` - Bootstrap shell script
+
+## How Each CLI Uses These
+
+### Claude Code
+- Reads `.md` files as command documentation
+- Uses built-in `/memo`, `/note`, `/question`, `/bootstrap` skills
+- Falls back to shell scripts if needed
+
+### GitHub Copilot
+- Reads `.md` files to understand what command should do
+- Can execute `.sh` scripts if needed
+- Interprets intent from `.md` file and executes appropriately
+
+### Other CLIs
+- May use `.md` as documentation
+- Can call `.sh` scripts directly
+- Check CLI documentation for command format
 
 ## Available Commands
 
