@@ -28,7 +28,7 @@ Choose **any AI provider for any project** based on your needs, budget, and pref
 - Personal project with Kilocode? ✓ Your choice
 - Personal project with Claude? ✓ Your choice
 - Work project with Copilot? ✓ Your choice
-- Work project with QWEN? ✓ Your choice
+- Work project with Gemini? ✓ Your choice
 
 **Same workflow structure. Infinite provider flexibility.** Switch providers anytime—just update one config file.
 
