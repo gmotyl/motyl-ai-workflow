@@ -6,12 +6,16 @@ This file defines your project registry and workflow for AI agents (Claude Code,
 
 | Project | Type | Provider | Notes Path | Repos/Resources |
 |---------|------|----------|-----------|-----------------|
-| [Add your projects here] | personal/work/freelance | claude/kilocode/copilot/qwen/gemini | `notes/[project]/` | List relevant repositories |
-
-### Example Entry
-```
 | my-app | work | claude | `notes/my-app/` | git/my-app, git/my-app-backend |
-```
+| my-project | personal | kilocode | `notes/my-project/` | github.com/username/my-project |
+| example-app | freelance | copilot | `notes/example-app/` | gitlab.com/client/example-app |
+
+### Adding More Projects
+
+To add your projects:
+1. Add a new row to the table above with your project details
+2. When you use `/note [project-name]`, Claude Code will lookup the project and use its notes path
+3. Remove example projects when you add your own
 
 ## Provider Configuration
 
@@ -104,10 +108,11 @@ Claude Code provides these as native slash commands:
 
 ### Quill Integration
 The `/note` command integrates with Quill meeting notes:
-- Search for meetings by name: `/note metro` finds "Metro" meetings in Quill
-- Extract meeting minutes and create project notes
+- Search for meetings by name: `/note my-project` finds "my-project" meetings in Quill
+- Extract meeting minutes and create project notes in `notes/my-project/notes/`
 - Preserve meeting context and action items
 - Link notes back to original Quill meetings
+- Falls back to generic `notes/notes/` if project not in registry
 
 ### Fallback Command Scripts
 If built-in skills aren't available, use executable scripts in `commands/` folder:
