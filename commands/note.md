@@ -15,8 +15,13 @@
 
 1. **Checks if topic is a registered project** in AGENTS.md
    - If yes: Create note in `[project-notes-path]/notes/`
-   - If no: Create note in `notes/notes/`
-2. Auto-initializes project directory structure if needed
+   - If no: Ask user "Do you want to initialize project [topic]?"
+2. **If initializing a new project:**
+   - Create directory structure: `notes/[topic]/notes/`, `notes/[topic]/progress/`, etc.
+   - Ask which provider to use (Claude, Kilocode, Copilot, QWEN, Gemini)
+   - Generate provider-specific config files
+   - Add project to AGENTS.md registry
+   - Create note in new project directory
 3. Creates structured note file with sections for summary, points, decisions, and next steps
 4. Opens in default editor for quick editing
 5. **QUILL INTEGRATION:** Search for meetings by name/topic
@@ -26,9 +31,11 @@
 ## Output Location
 
 **Smart routing based on AGENTS.md:**
-- `/note my-app` → Uses project path from AGENTS.md → `notes/my-app/notes/[date]-slug.md`
-- `/note my-project` → Uses project path from AGENTS.md → `notes/my-project/notes/[date]-slug.md`
-- `/note my-topic` → Generic note → `notes/notes/my-topic.md`
+- `/note my-app` → Found in AGENTS.md → `notes/my-app/notes/[date]-slug.md`
+- `/note my-project` → Found in AGENTS.md → `notes/my-project/notes/[date]-slug.md`
+- `/note new-project` → NOT in AGENTS.md → **Asks: "Initialize new project?"**
+  - If yes → Creates structure + adds to AGENTS.md + creates note
+  - If no → Creates generic note in `notes/notes/new-project.md`
 
 ## Template Structure
 
@@ -82,6 +89,38 @@ $ /note my-app
 
 📝 Creating new note: notes/my-app/notes/2026-02-20-session.md
 ✅ Note saved
+
+[Editor opens for editing]
+```
+
+## Example: New Project (Not in Registry)
+
+```
+$ /note new-app
+
+⚠️  Project "new-app" not found in AGENTS.md
+
+❓ Would you like to initialize project "new-app"? (y/n)
+→ y
+
+🔧 Project initialization:
+  1. Which provider? (1) claude (2) kilocode (3) copilot (4) qwen (5) gemini
+  → 1
+
+📁 Creating structure:
+  ✓ notes/new-app/notes/
+  ✓ notes/new-app/progress/
+  ✓ notes/new-app/
+
+📝 Generating config:
+  ✓ CLAUDE.md (memory)
+  ✓ .claude/settings.json (settings)
+
+📋 Updating AGENTS.md:
+  ✓ Added: | new-app | personal | claude | `notes/new-app/` | [repos] |
+
+📝 Creating note: notes/new-app/notes/2026-02-20-session.md
+✅ Project initialized + note created
 
 [Editor opens for editing]
 ```
@@ -148,7 +187,12 @@ When using `/note [meeting-name]`, the system:
 Use `/note` command directly - it's a built-in skill that:
 1. **Reads AGENTS.md** to check if topic is a registered project
 2. If found: Uses project's notes path from AGENTS.md
-3. If not: Uses generic `notes/notes/` path
+3. If not found: **Asks user to initialize the project**
+   - User selects provider (claude, kilocode, copilot, qwen, gemini)
+   - Creates full project structure
+   - Generates provider-specific configs
+   - Adds to AGENTS.md registry
+   - Creates note in new project directory
 4. Integrates with Quill for meeting search and minutes extraction
 5. Auto-initializes directory structure as needed
 
@@ -157,18 +201,23 @@ Copilot reads this `.md` file and understands to:
 1. Parse the topic from user input (or use date as default)
 2. **CRITICAL: Read AGENTS.md and check if topic is a registered project**
    - If yes: Get notes path from project registry
-   - If no: Use `notes/notes/`
-3. **If topic matches a Quill meeting:**
+   - If no: **Ask user to initialize the project**
+3. **If initializing new project:**
+   - Ask which provider (claude, kilocode, copilot, qwen, gemini)
+   - Create directory structure
+   - Generate provider-specific configs
+   - Update AGENTS.md with new project
+4. **If topic matches a Quill meeting:**
    - Search Quill for matching meetings
    - Retrieve minutes from most recent match
    - Extract key decisions and action items
    - Create note with Quill content in project directory
-4. **If no Quill match:**
+5. **If no Quill match:**
    - Create blank note with template structure
-   - Use project directory if registered, else `notes/notes/`
-5. Auto-create directory structure if needed (notes/, notes/notes/, etc.)
-6. Open in editor if available (EDITOR env var, nano, vi)
-7. Confirm save location and Quill integration status
+   - Use project directory (created above) for notes
+6. Auto-create directory structure if needed
+7. Open in editor if available (EDITOR env var, nano, vi)
+8. Confirm save location and Quill integration status
 
 ### For Command Line
 ```bash

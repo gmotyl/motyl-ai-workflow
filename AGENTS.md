@@ -106,13 +106,20 @@ Claude Code provides these as native slash commands:
 - `/question` or `/q` - Query project knowledge base
 - `/bootstrap` - Initialize PROJECT.md and project structure
 
+### Smart Project Initialization
+The `/note` command auto-initializes projects:
+- `/note my-project` → Found in AGENTS.md → Creates note in `notes/my-project/notes/`
+- `/note new-project` → NOT in AGENTS.md → **Asks: "Initialize project?"**
+  - If yes: Creates full structure + configs + adds to AGENTS.md
+  - If no: Creates generic note in `notes/notes/`
+
 ### Quill Integration
 The `/note` command integrates with Quill meeting notes:
 - Search for meetings by name: `/note my-project` finds "my-project" meetings in Quill
 - Extract meeting minutes and create project notes in `notes/my-project/notes/`
 - Preserve meeting context and action items
 - Link notes back to original Quill meetings
-- Falls back to generic `notes/notes/` if project not in registry
+- Works with both registered projects and newly initialized ones
 
 ### Fallback Command Scripts
 If built-in skills aren't available, use executable scripts in `commands/` folder:
