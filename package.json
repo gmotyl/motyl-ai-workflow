@@ -1,0 +1,32 @@
+{
+  "name": "motyl-ai-workflow",
+  "version": "1.0.0",
+  "description": "Provider-agnostic project management workflow template for developers",
+  "main": "index.js",
+  "scripts": {
+    "create-project": "./scripts/create-project.sh",
+    "export-project": "./scripts/export-project-to-notebooklm.sh",
+    "setup:all": "./scripts/setup:all",
+    "setup:claude-code": "./scripts/setup:claude-code",
+    "setup:kilocode-cli": "./scripts/setup:kilocode-cli",
+    "setup:copilot": "./scripts/setup:copilot",
+    "setup:qwen": "./scripts/setup:qwen",
+    "setup:gemini": "./scripts/setup:gemini",
+    "setup:todoist": "./scripts/setup:todoist",
+    "setup:github": "./scripts/setup:github",
+    "setup:jira": "./scripts/setup:jira",
+    "setup:azure-devops": "./scripts/setup:azure-devops",
+    "install-skills": "./skills/install-skills.sh"
+  },
+  "keywords": [
+    "project-management",
+    "ai-agents",
+    "claude",
+    "kilocode",
+    "copilot",
+    "workflow",
+    "multi-project"
+  ],
+  "author": "Greg Motyl",
+  "license": "MIT"
+}
