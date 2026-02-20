@@ -20,6 +20,54 @@ npm run setup:all
 npm run create-project
 ```
 
+## ⚠️ IMPORTANT: This is a Template for PRIVATE Use
+
+**This template is designed for personal/private projects - NOT for public repositories with notes.**
+
+When you fork this template:
+- ✅ The template code itself is safe to version-control
+- ❌ **Your actual `notes/` folder should be PRIVATE or in `.gitignore`**
+- ❌ **Do NOT push your project notes, decisions, meeting transcripts to public repos**
+- ✅ Your code/source files can be public - just keep notes private
+
+### Recommended Setup
+
+```bash
+# Option 1: Private Git Repository (Recommended)
+git clone https://github.com/motyl-ai/motyl-ai-workflow
+# Use as PRIVATE repo for your work
+# Push only code, keep notes/ in .gitignore or separate branch
+
+# Option 2: .gitignore Notes (Good)
+# Add to .gitignore:
+notes/                    # All project notes
+progress/                 # Session tracking
+# Push template code only, notes stay local
+
+# Option 3: Separate Branch
+git checkout -b private
+# Keep main branch with template code
+# Work on private branch with notes
+# Never push private branch
+```
+
+### What Should Stay Private
+
+❌ Don't commit to public repos:
+- Project notes and decisions (`notes/*/`)
+- Session progress files (`progress/*/`)
+- Meeting transcripts from Quill
+- Team discussions and architectural decisions
+- Client/project-specific information
+
+✅ Safe to commit:
+- Template code and scripts
+- Configuration examples (without secrets)
+- Documentation for other developers
+- Setup guides and instructions
+
+---
+
 ## 🎯 What is motyl-ai-workflow?
 
 A **provider-agnostic** project management template designed for developers managing multiple projects (personal, work, freelance).
