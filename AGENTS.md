@@ -17,67 +17,6 @@ To add your projects:
 2. When you use `/note [project-name]`, Claude Code will lookup the project and use its notes path
 3. Remove example projects when you add your own
 
-## Quick Start
-
-### Create a New Project
-
-```bash
-npm run create-project
-```
-
-Follow the prompts to create a new project in `notes/[project-name]/`:
-- Enter project name (e.g., `my-new-feature`)
-- Choose project type (personal, work, freelance)
-- Choose AI provider (claude, kilocode, copilot, qwen, gemini)
-- Optionally register in AGENTS.md
-
-### Start Working: Resume → Code → End Session
-
-Once your project is created, here's the typical workflow:
-
-```bash
-# 1. Start Claude Code session
-claude
-
-# 2. In Claude Code, resume your project
-resume my-new-feature
-
-# 3. Work on your tasks (write code, fix bugs, add features, etc.)
-# → Ask questions, implement changes, run tests
-
-# 4. When done, end the session
-session end
-
-# The agent will:
-# ✅ Create progress file: notes/my-new-feature/progress/2025-02-20-session-slug.md
-# ✅ Auto-commit and push to remote
-# ✅ Propose any remaining Todoist tasks
-# ✅ Clear context and prepare for next session
-```
-
-### Example Session
-
-```
-$ claude
-> resume my-new-feature
-
-📂 Resuming my-new-feature (personal, Claude Code)
-Repository: git/my-new-feature
-Last session: 2025-02-19 - Implemented user authentication
-
-[Previous context loaded...]
-
-> (Now ready to work - ask questions, implement features, etc.)
-
-> session end
-
-✅ Session ended:
-   - Progress: notes/my-new-feature/progress/2025-02-20-setup.md
-   - Commit: "session: my-new-feature 2025-02-20-setup"
-   - Pushed to remote
-   - Ready for next session!
-```
-
 ## Provider Configuration
 
 Each provider has its own configuration file location and format. When you create a project, the appropriate files are generated automatically.

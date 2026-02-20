@@ -4,6 +4,8 @@
 
 ## ⚡ Quick Start
 
+### Setup
+
 ```bash
 # Clone the repository
 git clone https://github.com/motyl-ai/motyl-ai-workflow
@@ -19,6 +21,33 @@ npm run setup:all
 # Create your first project
 npm run create-project
 ```
+
+### Start Working (Resume → Code → End)
+
+After creating a project, here's your typical session:
+
+```bash
+# 1. Start Claude Code
+claude
+
+# 2. Resume your project (loads context from last session)
+resume my-awesome-project
+
+# 3. Do your work (implement features, fix bugs, ask questions, etc.)
+# → The AI agent is ready to help
+
+# 4. Save progress and end session
+session end
+
+# ✅ Automatically:
+#    - Creates progress file: notes/my-awesome-project/progress/2025-02-20-slug.md
+#    - Commits changes with message: "session: my-awesome-project 2025-02-20-slug"
+#    - Pushes to remote for backup
+#    - Suggests Todoist tasks if needed
+#    - Clears context and starts fresh next time
+```
+
+See [WORKFLOW-EXAMPLE.md](./docs/WORKFLOW-EXAMPLE.md) for a detailed walkthrough with real output.
 
 ## ⚠️ IMPORTANT: This is a Template for PRIVATE Use
 
