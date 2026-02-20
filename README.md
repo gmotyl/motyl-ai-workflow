@@ -102,36 +102,34 @@ examples/
 
 Review these to understand the folder structure and workflow patterns.
 
-## 📋 Project Registry & Multi-Provider Configuration
+## 📋 Project Registry & Multi-Provider Support
 
-This workspace uses **provider-specific configuration files** so that ANY AI agent understands your project structure and how to work with it.
+This workspace supports **ANY AI provider** with proper configuration files in the right locations.
 
 **Core files (workspace root):**
-- **`AGENTS.md`** - Project registry + provider configuration guide
-- **`CLAUDE.md`** - Claude Code setup and commands
-- **`KILOCODE.md`** - Kilocode CLI setup and commands
-- **`COPILOT.md`** - GitHub Copilot setup and IDE integration
-- **`QWEN.md`** - QWEN/DashScope API setup
-- **`GEMINI.md`** - Google Gemini setup
-- **`docs/PROJECT-SETUP-GUIDE.md`** - Detailed setup guide
+- **`AGENTS.md`** - Project registry + provider overview
+- **`docs/PROVIDER-SETUP.md`** - COMPLETE setup guide for ALL providers
+- **`docs/PROJECT-SETUP-GUIDE.md`** - General project setup guide
+- **`templates/`** - Configuration templates for each provider
 
-**Per-project files (`.agent/` directory):**
-- **`.agent/config.json`** - Specifies which provider to use
-- **`.agent/[provider].md`** - Quick reference for that provider
+**When you create a project**, the correct files are generated for your chosen provider:
 
-When you create a project, it automatically:
-1. Creates the proper folder structure for notes and progress tracking
-2. Generates the correct configuration file for your chosen provider
-3. Optionally registers in `AGENTS.md` for multi-project workspace support
+| Provider | Files Generated | Session Tracking |
+|----------|-----------------|-----------------|
+| **Claude Code** | `CLAUDE.md` + `.claude/settings.json` | ✅ Automatic |
+| **Kilocode** | `opencode.json` | ✅ Automatic |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Manual |
+| **QWEN** | `.qwen/settings.json` | Manual |
+| **Google Gemini** | `.gemini/settings.json` | Manual |
 
-This means commands work for **any provider**:
-- Claude: `resume my-project`, `/memo`, `/note`
-- Kilocode: `kilocode resume`, `kilocode my-project`
-- Copilot: Resume via IDE chat, `@workspace` references
-- QWEN: Load context from progress files in prompts
-- Gemini: Load context in Python/Node.js scripts
+**Key Point:** Each provider expects config files in **specific locations** with **specific formats**. This template generates them correctly.
 
-See [PROJECT-SETUP-GUIDE.md](docs/PROJECT-SETUP-GUIDE.md) for complete setup instructions.
+See [**PROVIDER-SETUP.md**](docs/PROVIDER-SETUP.md) for:
+- Exact file locations for each provider
+- Configuration file examples
+- Session tracking setup
+- Global vs project-level settings
+- How to switch providers mid-project
 
 ## 🛠️ Quick Commands
 

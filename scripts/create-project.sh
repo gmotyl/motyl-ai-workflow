@@ -125,80 +125,72 @@ touch "$PROJECT_NAME/notes/notes/.gitkeep"
 touch "$PROJECT_NAME/notes/log/.gitkeep"
 touch "$PROJECT_NAME/progress/.gitkeep"
 
-# Generate provider-specific configuration files
+# Get script directory for template access
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TEMPLATE_DIR="$(dirname "$SCRIPT_DIR")/templates"
+
+# Generate provider-specific configuration files in CORRECT locations
 case $PROVIDER in
     claude)
-        cat > "$PROJECT_NAME/.agent/claude.md" << 'EOFCLAUDE'
-# Claude Code Configuration
+        # Claude uses: CLAUDE.md (memory) + .claude/settings.json (config)
+        mkdir -p "$PROJECT_NAME/.claude"
 
-**Resume:** `resume [project-name]`
-**Session End:** Type "session end" to save progress
-**Folder:** `notes/notes/` for session notes, `progress/` for tracking
+        # Create CLAUDE.md from template
+        cat "$TEMPLATE_DIR/claude-memory.md" | \
+            sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
+            sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
+            sed "s|{{DATE}}|$(date +%Y-%m-%d)|g" | \
+            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/CLAUDE.md"
 
-See the workspace root `CLAUDE.md` for complete Claude Code setup guide.
-EOFCLAUDE
+        # Create .claude/settings.json from template
+        cat "$TEMPLATE_DIR/claude-settings.json" > "$PROJECT_NAME/.claude/settings.json"
         ;;
+
     kilocode)
-        cat > "$PROJECT_NAME/.agent/kilocode.md" << 'EOFKILO'
-# Kilocode CLI Configuration
-
-**Resume:** `kilocode resume` or `kilocode [project-name] resume`
-**Interactive:** `kilocode` then type commands
-**Session End:** Type "session end" to save progress
-**Folder:** `notes/notes/` for session notes, `progress/` for tracking
-
-See the workspace root `KILOCODE.md` for complete Kilocode setup guide.
-EOFKILO
+        # Kilocode uses: opencode.json in project root
+        cat "$TEMPLATE_DIR/kilocode-opencode.json" | \
+            sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
+            sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
+            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/opencode.json"
         ;;
+
     copilot)
-        cat > "$PROJECT_NAME/.agent/copilot.md" << 'EOFCOPILOT'
-# GitHub Copilot Configuration
-
-**IDE:** Open project folder in VS Code, JetBrains, or Visual Studio
-**Chat:** Use IDE's Copilot Chat (Cmd+Shift+L in VS Code)
-**Resume:** Type "resume [project-name]" in chat
-**Session End:** Type "session end" in chat to save progress
-**Folder:** `notes/notes/` for session notes, `progress/` for tracking
-
-See the workspace root `COPILOT.md` for complete Copilot setup guide.
-EOFCOPILOT
+        # Copilot uses: .github/copilot-instructions.md (GitHub-specific instructions)
+        mkdir -p "$PROJECT_NAME/.github"
+        cat "$TEMPLATE_DIR/copilot-instructions.md" | \
+            sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
+            sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
+            sed "s|{{DATE}}|$(date +%Y-%m-%d)|g" > "$PROJECT_NAME/.github/copilot-instructions.md"
         ;;
+
     qwen)
-        cat > "$PROJECT_NAME/.agent/qwen.md" << 'EOFQWEN'
-# QWEN Configuration
-
-**Setup:** export DASHSCOPE_API_KEY="your-key"
-**CLI:** `qwen-cli` for interactive mode
-**Single Prompt:** `qwen-cli "your prompt here"`
-**Session End:** Manually save progress files
-**Folder:** `notes/notes/` for session notes, `progress/` for tracking
-
-See the workspace root `QWEN.md` for complete QWEN setup guide.
-EOFQWEN
+        # Qwen uses: .qwen/settings.json in project root
+        mkdir -p "$PROJECT_NAME/.qwen"
+        cat "$TEMPLATE_DIR/qwen-settings.json" | \
+            sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
+            sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
+            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/.qwen/settings.json"
         ;;
+
     gemini)
-        cat > "$PROJECT_NAME/.agent/gemini.md" << 'EOFGEMINI'
-# Google Gemini Configuration
-
-**Setup:** export GEMINI_API_KEY="your-key"
-**Python:** Use google-generativeai client library
-**Node.js:** Use @google/generative-ai package
-**Session End:** Manually save progress files
-**Folder:** `notes/notes/` for session notes, `progress/` for tracking
-
-See the workspace root `GEMINI.md` for complete Gemini setup guide.
-EOFGEMINI
+        # Gemini uses: .gemini/settings.json in project root
+        mkdir -p "$PROJECT_NAME/.gemini"
+        cat "$TEMPLATE_DIR/gemini-settings.json" | \
+            sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
+            sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
+            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/.gemini/settings.json"
         ;;
+
     *)
-        cat > "$PROJECT_NAME/.agent/${PROVIDER}.md" << 'EOFCUSTOM'
-# Custom Provider Configuration
+        # Custom provider - create generic config directory
+        mkdir -p "$PROJECT_NAME/.$PROVIDER"
+        cat > "$PROJECT_NAME/.$PROVIDER/README.md" << EOF
+# $PROVIDER Configuration
 
-**Provider:** $PROVIDER
-**Session End:** Manually save progress files
-**Folder:** `notes/notes/` for session notes, `progress/` for tracking
+Configure your $PROVIDER provider settings here.
 
-Update this file with provider-specific setup instructions.
-EOFCUSTOM
+See \`docs/PROVIDER-SETUP.md\` in workspace root for setup instructions.
+EOF
         ;;
 esac
 

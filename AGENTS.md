@@ -13,24 +13,31 @@ This file defines your project registry and workflow for AI agents (Claude Code,
 | my-app | work | claude | `notes/my-app/` | git/my-app, git/my-app-backend |
 ```
 
-## Provider Configuration Files
+## Provider Configuration
 
-Each provider has a dedicated configuration file. When you create a project, the appropriate file is generated in `.agent/`:
+Each provider has its own configuration file location and format. When you create a project, the appropriate files are generated automatically.
 
-| Provider | Config File | Setup Command | Key Features |
-|----------|-------------|---------------|--------------|
-| **Claude Code** | `CLAUDE.md` + `.agent/claude.md` | `npm run setup:claude-code` | Resume sessions, /memo, /note, session tracking |
-| **Kilocode** | `KILOCODE.md` + `.agent/kilocode.md` | `npm run setup:kilocode-cli` | Interactive CLI, autonomous mode, multi-turn |
-| **GitHub Copilot** | `COPILOT.md` + `.agent/copilot.md` | `npm run setup:copilot` | IDE integration, code completion, chat |
-| **QWEN** | `QWEN.md` + `.agent/qwen.md` | `npm run setup:qwen` | DashScope API, multiple models, cost-effective |
-| **Google Gemini** | `GEMINI.md` + `.agent/gemini.md` | `npm run setup:gemini` | Vision models, multi-modal, image analysis |
-| **Custom** | `[provider].md` | Manual setup | Custom provider support |
+| Provider | Config File(s) | Location | Session Tracking |
+|----------|-----------------|----------|-----------------|
+| **Claude Code** | `CLAUDE.md` + `.claude/settings.json` | Project root | ✅ Auto (session end) |
+| **Kilocode** | `opencode.json` | Project root | ✅ Auto (session end) |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Project .github/ | ⚠️ Manual |
+| **QWEN** | `.qwen/settings.json` | Project `.qwen/` | ⚠️ Manual |
+| **Google Gemini** | `.gemini/settings.json` | Project `.gemini/` | ⚠️ Manual |
 
-**How to use:**
-1. Each project's `.agent/config.json` specifies the provider
-2. Workspace root has `[PROVIDER].md` with setup and usage details
-3. Project's `.agent/[provider].md` has quick reference
-4. Generated automatically by `create-project.sh`
+**Important:**
+- Each provider expects its config files in **specific locations** (see `docs/PROVIDER-SETUP.md`)
+- Claude Code is the only provider with automatic session tracking
+- Other providers require manual progress saving or custom scripts
+- Global settings: `~/.claude/`, `~/.config/kilo/`, `~/.copilot/`, `~/.qwen/`, `~/.gemini/`
+
+**Setup Guide:**
+See `docs/PROVIDER-SETUP.md` for:
+1. CORRECT file locations for each provider
+2. Configuration file formats and examples
+3. Global vs project-level configuration
+4. Session tracking setup for each provider
+5. Switching providers mid-project
 
 ## Project-Specific Rules
 
