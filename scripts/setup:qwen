@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "🔧 Setting up QWEN..."
+echo ""
+echo "Manual setup required. See: agents/qwen.md"
+echo ""
+read -p "Have you configured QWEN? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Setup QWEN from: https://www.qwen.ai/"
+    exit 1
+fi
+echo "✅ QWEN setup complete"

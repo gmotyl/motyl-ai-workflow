@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "🔧 Setting up Claude Code..."
+echo ""
+echo "Manual setup required. See: agents/claude-code.md"
+echo ""
+read -p "Have you installed Claude Code CLI? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Install Claude Code from: https://claude.com/claude-code"
+    exit 1
+fi
+echo "✅ Claude Code setup complete"
