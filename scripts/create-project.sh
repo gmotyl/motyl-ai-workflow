@@ -14,8 +14,8 @@ if [ -z "$PROJECT_NAME" ]; then
     exit 1
 fi
 
-if [ -d "$PROJECT_NAME" ]; then
-    echo "❌ Project directory already exists"
+if [ -d "notes/$PROJECT_NAME" ]; then
+    echo "❌ Project directory already exists at notes/$PROJECT_NAME"
     exit 1
 fi
 
@@ -61,13 +61,13 @@ if [ -z "$TEAM" ]; then
     TEAM="Solo"
 fi
 
-# Create project structure
-mkdir -p "$PROJECT_NAME"/.agent
-mkdir -p "$PROJECT_NAME"/notes/{notes,log}
-mkdir -p "$PROJECT_NAME"/progress
+# Create project structure in notes/ folder
+mkdir -p "notes/$PROJECT_NAME"/.agent
+mkdir -p "notes/$PROJECT_NAME"/notes/{notes,log}
+mkdir -p "notes/$PROJECT_NAME"/progress
 
 # Generate PROJECT.md
-cat > "$PROJECT_NAME/PROJECT.md" << EOFMD
+cat > "notes/$PROJECT_NAME/PROJECT.md" << EOFMD
 # $PROJECT_NAME
 
 **Type:** $PROJECT_TYPE
@@ -97,7 +97,7 @@ Happy coding! 🚀
 EOFMD
 
 # Generate DECISIONS.md
-cat > "$PROJECT_NAME/DECISIONS.md" << 'EOFDEC'
+cat > "notes/$PROJECT_NAME/DECISIONS.md" << 'EOFDEC'
 # Key Decisions
 
 [Document your architectural and project decisions here]
@@ -108,7 +108,7 @@ Add decisions as the project evolves.
 EOFDEC
 
 # Generate .agent/config.json
-cat > "$PROJECT_NAME/.agent/config.json" << EOFJSON
+cat > "notes/$PROJECT_NAME/.agent/config.json" << EOFJSON
 {
   "provider": "$PROVIDER",
   "provider_options": {},
@@ -121,9 +121,9 @@ cat > "$PROJECT_NAME/.agent/config.json" << EOFJSON
 EOFJSON
 
 # Create placeholders
-touch "$PROJECT_NAME/notes/notes/.gitkeep"
-touch "$PROJECT_NAME/notes/log/.gitkeep"
-touch "$PROJECT_NAME/progress/.gitkeep"
+touch "notes/$PROJECT_NAME/notes/notes/.gitkeep"
+touch "notes/$PROJECT_NAME/notes/log/.gitkeep"
+touch "notes/$PROJECT_NAME/progress/.gitkeep"
 
 # Get script directory for template access
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -133,17 +133,17 @@ TEMPLATE_DIR="$(dirname "$SCRIPT_DIR")/templates"
 case $PROVIDER in
     claude)
         # Claude uses: CLAUDE.md (memory) + .claude/settings.json (config)
-        mkdir -p "$PROJECT_NAME/.claude"
+        mkdir -p "notes/$PROJECT_NAME/.claude"
 
         # Create CLAUDE.md from template
         cat "$TEMPLATE_DIR/claude-memory.md" | \
             sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
             sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
             sed "s|{{DATE}}|$(date +%Y-%m-%d)|g" | \
-            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/CLAUDE.md"
+            sed "s|{{TEAM}}|$TEAM|g" > "notes/$PROJECT_NAME/CLAUDE.md"
 
         # Create .claude/settings.json from template
-        cat "$TEMPLATE_DIR/claude-settings.json" > "$PROJECT_NAME/.claude/settings.json"
+        cat "$TEMPLATE_DIR/claude-settings.json" > "notes/$PROJECT_NAME/.claude/settings.json"
         ;;
 
     kilocode)
@@ -151,40 +151,40 @@ case $PROVIDER in
         cat "$TEMPLATE_DIR/kilocode-opencode.json" | \
             sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
             sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
-            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/opencode.json"
+            sed "s|{{TEAM}}|$TEAM|g" > "notes/$PROJECT_NAME/opencode.json"
         ;;
 
     copilot)
         # Copilot uses: .github/copilot-instructions.md (GitHub-specific instructions)
-        mkdir -p "$PROJECT_NAME/.github"
+        mkdir -p "notes/$PROJECT_NAME/.github"
         cat "$TEMPLATE_DIR/copilot-instructions.md" | \
             sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
             sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
-            sed "s|{{DATE}}|$(date +%Y-%m-%d)|g" > "$PROJECT_NAME/.github/copilot-instructions.md"
+            sed "s|{{DATE}}|$(date +%Y-%m-%d)|g" > "notes/$PROJECT_NAME/.github/copilot-instructions.md"
         ;;
 
     qwen)
         # Qwen uses: .qwen/settings.json in project root
-        mkdir -p "$PROJECT_NAME/.qwen"
+        mkdir -p "notes/$PROJECT_NAME/.qwen"
         cat "$TEMPLATE_DIR/qwen-settings.json" | \
             sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
             sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
-            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/.qwen/settings.json"
+            sed "s|{{TEAM}}|$TEAM|g" > "notes/$PROJECT_NAME/.qwen/settings.json"
         ;;
 
     gemini)
         # Gemini uses: .gemini/settings.json in project root
-        mkdir -p "$PROJECT_NAME/.gemini"
+        mkdir -p "notes/$PROJECT_NAME/.gemini"
         cat "$TEMPLATE_DIR/gemini-settings.json" | \
             sed "s|{{PROJECT_NAME}}|$PROJECT_NAME|g" | \
             sed "s|{{PROJECT_TYPE}}|$PROJECT_TYPE|g" | \
-            sed "s|{{TEAM}}|$TEAM|g" > "$PROJECT_NAME/.gemini/settings.json"
+            sed "s|{{TEAM}}|$TEAM|g" > "notes/$PROJECT_NAME/.gemini/settings.json"
         ;;
 
     *)
         # Custom provider - create generic config directory
-        mkdir -p "$PROJECT_NAME/.$PROVIDER"
-        cat > "$PROJECT_NAME/.$PROVIDER/README.md" << EOF
+        mkdir -p "notes/$PROJECT_NAME/.$PROVIDER"
+        cat > "notes/$PROJECT_NAME/.$PROVIDER/README.md" << EOF
 # $PROVIDER Configuration
 
 Configure your $PROVIDER provider settings here.
@@ -195,10 +195,10 @@ EOF
 esac
 
 echo ""
-echo "✅ Project created: $PROJECT_NAME/"
+echo "✅ Project created: notes/$PROJECT_NAME/"
 echo ""
 echo "Project structure:"
-echo "  $PROJECT_NAME/"
+echo "  notes/$PROJECT_NAME/"
 echo "  ├── notes/"
 echo "  │   ├── notes/          # Session notes & decisions"
 echo "  │   └── log/            # Transcripts & logs"
@@ -208,19 +208,18 @@ echo "  ├── PROJECT.md          # Project overview"
 echo "  └── DECISIONS.md        # Key decisions"
 echo ""
 echo "Next steps:"
-echo "1. cd $PROJECT_NAME"
+echo "1. cd notes/$PROJECT_NAME"
 echo "2. Update PROJECT.md with your project description"
 if [ "$PROVIDER" = "claude" ]; then
-    echo "3. Review .agent/claude.md for Claude Code setup"
+    echo "3. Review CLAUDE.md for Claude Code setup"
 fi
 echo ""
 echo "To register in AGENTS.md (project registry):"
 read -p "Register this project in AGENTS.md? (y/n): " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    # Add entry to AGENTS.md if it exists in parent directory
-    if [ -f "../AGENTS.md" ]; then
-        cd ..
+    # Add entry to AGENTS.md if it exists in current directory
+    if [ -f "AGENTS.md" ]; then
         echo ""
         REPOS="$PROJECT_NAME"
         if [ ! -z "$TEAM" ] && [ "$TEAM" != "Solo" ]; then
@@ -240,10 +239,10 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
         echo "✅ Registered in AGENTS.md"
         echo ""
-        cd "$PROJECT_NAME"
     else
-        echo "⚠️  Parent AGENTS.md not found. Register manually:"
-        echo "   Run: ../scripts/register-project.sh"
+        echo "⚠️  AGENTS.md not found in current directory. Register manually:"
+        echo "   Edit AGENTS.md and add this row to the Projects Registry table:"
+        echo "   $NEW_ENTRY"
     fi
 fi
 echo ""
