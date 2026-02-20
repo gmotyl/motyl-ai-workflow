@@ -28,7 +28,21 @@ At the beginning of each session:
 
 **Resume Usage:** `resume [project-name]` → Get project context
 
-**Commands:** memo, note, question/q, bootstrap
+**Built-in Claude Code Skills:**
+- `/memo` - Quick note capture
+- `/note` - Save session notes
+- `/question` or `/q` - Query project knowledge
+- `/bootstrap` - Initialize PROJECT.md structure
+
+**Fallback Command Scripts** (if skills unavailable):
+```bash
+./commands/memo.sh "thought"
+./commands/note.sh topic
+./commands/question.sh "query"
+./commands/bootstrap.sh
+```
+
+See `commands/README.md` for full documentation.
 
 **Session Tracking:** Active - write "session end" to finalize
 

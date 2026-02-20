@@ -92,6 +92,28 @@ Commands in `commands/` folder (if created). Use `/command` syntax:
 - `/bootstrap` - Initialize PROJECT.md and _index.json
 - `/resume` - Quick session resume (progress + PROJECT.md only)
 
+## Commands & Skills
+
+### Claude Code Built-in Skills
+Claude Code provides these as native slash commands:
+- `/memo` - Quick capture a thought or note
+- `/note` - Process meeting transcripts or session notes
+- `/question` or `/q` - Query project knowledge base
+- `/bootstrap` - Initialize PROJECT.md and project structure
+
+### Fallback Command Scripts
+If built-in skills aren't available, use executable scripts in `commands/` folder:
+```bash
+./commands/memo.sh "Your quick thought"
+./commands/note.sh session-topic
+./commands/question.sh "What is X?"
+./commands/bootstrap.sh
+```
+
+See `commands/README.md` for detailed usage and examples.
+
+---
+
 ## Code Style Guidelines
 
 ### TypeScript/JavaScript
