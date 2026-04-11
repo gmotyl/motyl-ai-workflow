@@ -47,15 +47,60 @@ Skills are optional — the panel and scripts work without them — but they mak
 
 ## Quick Start
 
+Two ways to use this:
+
+### Option A — Fork and own it (Recommended)
+
+Like `create-react-app` used to be — fork once, make it yours, evolve it however you want. No upstream dependency.
+
 ```bash
-# Fork this repo, then:
+# Fork this repo on GitHub, then:
 git clone git@github.com:YOUR_USERNAME/motyl-ai-workflow.git my-workspace
 cd my-workspace
+
+# Configure the panel
 cp panel/panel.config.ts panel/panel.config.local.ts
 # Edit panel.config.local.ts with your paths
+
+# Set up your private project registry
+cp AGENTS.md.example .projects.local.md
+# Edit .projects.local.md with your actual projects
+
+# Start the panel
 cd panel && npm install && npm run dev
 # Open http://localhost:3010
 ```
+
+You own the code. Customize freely. If you want to pull in future improvements from this repo, do it manually by cherry-picking what's useful.
+
+### Option B — Track upstream (recommended for teams)
+
+Keep your private workspace in sync with this repo. New panel features, scripts, and commands flow in automatically.
+
+```bash
+# Clone both repos into the same parent directory
+git clone git@github.com:gmotyl/motyl-ai-workflow.git   # the upstream
+git clone git@github.com:YOUR_USERNAME/my-workspace.git  # your private repo
+cd my-workspace
+
+# Set up private config
+cp ../motyl-ai-workflow/AGENTS.md.example .projects.local.md
+# Edit .projects.local.md with your actual projects
+
+cp panel/panel.config.ts panel/panel.config.local.ts
+# Edit panel.config.local.ts with your paths
+
+# Start the panel
+cd panel && npm install && npm run dev
+```
+
+To pull the latest improvements from upstream:
+
+```bash
+npm run update   # or: bash scripts/update.sh
+```
+
+This pulls `panel/`, `commands/`, and `scripts/` from the upstream clone. Your private files (`.projects.local.md`, `panel.config.local.ts`, custom scripts) are never touched.
 
 ## Project Structure
 
