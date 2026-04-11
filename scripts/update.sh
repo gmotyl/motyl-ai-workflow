@@ -21,19 +21,19 @@ git -C "$UPSTREAM_DIR" pull origin main --quiet
 
 echo ""
 echo "Syncing panel/..."
-rsync -a --delete \
+rsync -a \
   --exclude='node_modules/' \
   --exclude='dist/' \
   --exclude='.DS_Store' \
   "$UPSTREAM_DIR/panel/" "$REPO_ROOT/panel/"
 
 echo "Syncing commands/..."
-rsync -a --delete \
+rsync -a \
   --exclude='.DS_Store' \
   "$UPSTREAM_DIR/commands/" "$REPO_ROOT/commands/"
 
 echo "Syncing scripts/..."
-rsync -a --delete \
+rsync -a \
   --exclude='.DS_Store' \
   "$UPSTREAM_DIR/scripts/" "$REPO_ROOT/scripts/"
 
