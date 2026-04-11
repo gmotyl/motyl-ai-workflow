@@ -143,43 +143,41 @@ Right-hand sidebar showing the file tree for the active project. Click to naviga
 
 ## Using as Your Upstream
 
-If you've forked this repo as the foundation for your private workspace, use git subtree to track improvements one-directionally.
+Fork this repo as the foundation for your private workspace. Upgrades sync via rsync — your private files are never touched.
 
-### One-Time Setup (in your private repo)
+### One-Time Setup
 
 ```bash
-# Add upstream remote
-git remote add upstream git@github.com:gmotyl/motyl-ai-workflow.git
+# 1. Fork this repo on GitHub, then clone both repos side by side:
+git clone git@github.com:YOUR_USERNAME/motyl-ai-workflow.git
+git clone git@github.com:YOUR_USERNAME/my-workspace.git
+# Both must be in the same parent directory so update.sh can find the upstream
 
-# Link panel, commands, and scripts as tracked subtrees
-git subtree add --prefix panel upstream main --squash
-git subtree add --prefix commands upstream main --squash
-git subtree add --prefix scripts upstream main --squash
+# 2. In your private workspace, copy the private config templates:
+cp AGENTS.md.example .projects.local.md
+# Edit .projects.local.md with your actual projects
 ```
 
 ### Upgrading
 
 ```bash
 bash scripts/update.sh
+# or: npm run update
 ```
 
-This pulls the latest `panel/`, `commands/`, and `scripts/` from upstream. Your private project data and config are never touched.
+This pulls the latest from your `motyl-ai-workflow` fork (via `git pull`), then rsyncs `panel/`, `commands/`, and `scripts/` into your workspace. Files that only exist in your private repo are never deleted.
 
 ### Private Config
 
-After setup, copy the templates for your private data:
-
-```bash
-cp AGENTS.md.example .projects.local.md
-# Edit .projects.local.md with your actual projects
-```
-
-`.projects.local.md` is gitignored — your project names never leak into upstream.
+| File | Purpose |
+|------|---------|
+| `.projects.local.md` | Your private project registry (gitignored) |
+| `panel/panel.config.local.ts` | Local panel path overrides (gitignored) |
 
 ### Rules
 
-- **Never** run `git subtree push` from your private repo — improvements go into `motyl-ai-workflow` directly
-- `AGENTS.md` and `CLAUDE.md` are manually maintained — cherry-pick relevant upstream changes as needed
+- Improve the panel, commands, and scripts in `motyl-ai-workflow` directly — never push changes from your private workspace back here
+- `AGENTS.md` and `CLAUDE.md` are manually maintained — cherry-pick upstream improvements as needed
 
 ## Creating a New Project
 
