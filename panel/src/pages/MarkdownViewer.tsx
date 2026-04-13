@@ -1,8 +1,9 @@
 import { useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { ExternalLink, Copy, FileText, Check } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { ExternalLink, Copy, Check } from "lucide-react";
 import { useWebSocket } from "../hooks/useWebSocket";
 import { useActiveFile } from "../hooks/useActiveFile";
+import { useBreadcrumbActions } from "../components/Breadcrumbs";
 import MarkdownRenderer from "../components/MarkdownRenderer";
 import ImageDropZone from "../components/ImageDropZone";
 
@@ -39,15 +40,44 @@ export default function MarkdownViewer() {
     }
   }, [lastMessage]);
 
-  const openInVSCode = () => {
+  const openInVSCode = useCallback(() => {
     window.open(`vscode://file/${absolutePath}`, "_self");
-  };
+  }, [absolutePath]);
 
-  const copyPath = () => {
+  const copyPath = useCallback(() => {
     navigator.clipboard.writeText(absolutePath);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-  };
+  }, [absolutePath]);
+
+  // Inject VS Code + Path buttons into the breadcrumb bar
+  useBreadcrumbActions(
+    absolutePath ? (
+      <>
+        <button
+          onClick={openInVSCode}
+          className="flex items-center gap-1.5 text-xs px-2 py-1 rounded-md transition-colors"
+          style={{ color: "var(--text-secondary)" }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-hover)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+        >
+          <ExternalLink className="w-3 h-3" />
+          VS Code
+        </button>
+        <button
+          onClick={copyPath}
+          className="flex items-center gap-1.5 text-xs px-2 py-1 rounded-md transition-colors"
+          style={{ color: copied ? "var(--green)" : "var(--text-secondary)" }}
+          onMouseEnter={(e) => { if (!copied) { e.currentTarget.style.background = "var(--bg-hover)"; e.currentTarget.style.color = "var(--text-primary)"; }}}
+          onMouseLeave={(e) => { if (!copied) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}}
+        >
+          {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+          {copied ? "Copied" : "Path"}
+        </button>
+      </>
+    ) : null,
+    [absolutePath, copied, openInVSCode, copyPath]
+  );
 
   if (loading) return <div className="p-6" style={{ color: "var(--text-muted)" }}>Loading...</div>;
 
@@ -56,36 +86,9 @@ export default function MarkdownViewer() {
 
   return (
     <div className="p-6">
-      {/* Toolbar */}
-      <div className="flex items-center gap-3 mb-6 pb-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-        <FileText className="w-4 h-4 shrink-0" style={{ color: "var(--text-tertiary)" }} />
-        <span className="text-sm flex-1 font-mono truncate" style={{ color: "var(--text-tertiary)" }}>{filePath}</span>
-        <button
-          onClick={openInVSCode}
-          className="flex items-center gap-1.5 text-sm px-2 py-1 rounded-md transition-colors"
-          style={{ color: "var(--text-secondary)" }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-hover)"; e.currentTarget.style.color = "var(--text-primary)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-          VS Code
-        </button>
-        <button
-          onClick={copyPath}
-          className="flex items-center gap-1.5 text-sm px-2 py-1 rounded-md transition-colors"
-          style={{ color: copied ? "var(--green)" : "var(--text-secondary)" }}
-          onMouseEnter={(e) => { if (!copied) { e.currentTarget.style.background = "var(--bg-hover)"; e.currentTarget.style.color = "var(--text-primary)"; }}}
-          onMouseLeave={(e) => { if (!copied) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-secondary)"; }}}
-        >
-          {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-          {copied ? "Copied" : "Path"}
-        </button>
-      </div>
-
-      {/* Content */}
       <ImageDropZone targetMarkdown={filePath}>
         {isMarkdown ? (
-          <MarkdownRenderer content={content} />
+          <MarkdownRenderer content={content} basePath={filePath} />
         ) : isJson ? (
           <pre className="text-sm font-mono p-4 rounded-lg overflow-auto" style={{ background: "var(--bg-surface)", color: "var(--text-primary)" }}>
             {JSON.stringify(JSON.parse(content), null, 2)}

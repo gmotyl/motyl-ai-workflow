@@ -84,7 +84,7 @@ export default function ProjectView() {
         .sort((a, b) => b.modified - a.modified)
     : [];
 
-  const sections = ["plans", "notes", "progress"];
+  const sections = ["plans", "notes", "memo", "progress"];
   if (hasRepos) sections.push("repos");
 
   const openInVSCode = (path: string) => window.open(`vscode://file/${path}`, "_self");
@@ -205,7 +205,7 @@ export default function ProjectView() {
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading...</p>
           ) : (
             <ImageDropZone targetMarkdown={selectedFile}>
-              {isMarkdown(selectedFile) ? <MarkdownRenderer content={fileContent} />
+              {isMarkdown(selectedFile) ? <MarkdownRenderer content={fileContent} basePath={selectedFile} />
                 : isJson(selectedFile) ? (
                   <pre className="text-sm font-mono p-4 rounded-lg overflow-auto" style={{ background: "var(--bg-surface)" }}>
                     {(() => { try { return JSON.stringify(JSON.parse(fileContent), null, 2); } catch { return fileContent; } })()}
@@ -230,7 +230,7 @@ export default function ProjectView() {
           )}
           {error && <p className="text-sm" style={{ color: "var(--red)" }}>Failed to load PROJECT.md: {error}</p>}
           {!error && content === null && <p className="text-sm" style={{ color: "var(--text-muted)" }}>Loading...</p>}
-          {content !== null && <MarkdownRenderer content={content} />}
+          {content !== null && <MarkdownRenderer content={content} basePath={`${name}/PROJECT.md`} />}
         </>
       )}
     </div>

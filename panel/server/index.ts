@@ -9,6 +9,8 @@ import gitRouter from "./routes/git.js";
 import agentsRouter from "./routes/agents.js";
 import searchRouter from "./routes/search.js";
 import imagesRouter from "./routes/images.js";
+import commandsRouter from "./routes/commands.js";
+import agentSettingsRouter from "./routes/agent-settings.js";
 import { setupWebSocket, setupFileWatcher } from "./watcher.js";
 import { pruneDeadAgents } from "./lib/agent-registry.js";
 
@@ -37,6 +39,8 @@ async function start() {
   app.use("/api/agents", agentsRouter);
   app.use("/api/search", searchRouter);
   app.use("/api/images", imagesRouter);
+  app.use("/api/commands", commandsRouter);
+  app.use("/api/agent-settings", agentSettingsRouter);
 
   app.use(vite.middlewares);
 

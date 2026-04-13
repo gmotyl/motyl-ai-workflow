@@ -3,6 +3,7 @@ import { PanelLeft, PanelRight } from "lucide-react";
 import { useSidebarState } from "../hooks/useSidebarState";
 import LeftSidebar from "./LeftSidebar";
 import RightSidebar from "./RightSidebar";
+import Breadcrumbs from "./Breadcrumbs";
 
 interface LayoutProps {
   children: ReactNode;
@@ -38,6 +39,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Main content */}
       <main className="flex-1 overflow-auto min-w-0">
+        <Breadcrumbs />
         {children}
       </main>
 

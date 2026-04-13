@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import { Cpu, FolderOpen, GitBranch, Star } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Cpu, FolderOpen, GitBranch, HelpCircle, Settings, Star } from "lucide-react";
 import { useProjects } from "../hooks/useProjects";
 import { useAgents } from "../hooks/useAgents";
 import { useFavorites } from "../hooks/useFavorites";
@@ -18,6 +18,7 @@ function SectionHeader({ icon: Icon, label }: { icon: typeof Cpu; label: string 
 }
 
 export default function LeftSidebar() {
+  const navigate = useNavigate();
   const projects = useProjects();
   const agents = useAgents();
   const { toggle, isFavorite, sortWithFavorites } = useFavorites();
@@ -77,6 +78,29 @@ export default function LeftSidebar() {
       <section className="mt-auto">
         <SectionHeader icon={GitBranch} label="Git" />
         <GitSummary />
+      </section>
+
+      <section className="px-1 pb-3 space-y-0.5">
+        <button
+          onClick={() => navigate("/view/_help/panel-guide.md")}
+          className="flex items-center gap-2 w-full text-[12px] px-2 py-1.5 rounded-md transition-colors"
+          style={{ color: "var(--text-muted)" }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-hover)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
+        >
+          <HelpCircle size={14} />
+          Help & Shortcuts
+        </button>
+        <button
+          onClick={() => navigate("/settings")}
+          className="flex items-center gap-2 w-full text-[12px] px-2 py-1.5 rounded-md transition-colors"
+          style={{ color: "var(--text-muted)" }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-hover)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
+        >
+          <Settings size={14} />
+          Agent Settings
+        </button>
       </section>
     </div>
   );

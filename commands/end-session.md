@@ -24,6 +24,7 @@ Saves session progress, commits, and optionally creates follow-up Todoist tasks.
    - Useful context for smooth pickup on next resume
    - Do NOT duplicate info already in PROJECT.md or AGENTS.md
    - Focus on what's unique to this session
+   - **At the end, add a `## Notatka` section** — a narrative paragraph in Polish, written in a casual blog-like tone for Greg to read. Summarize what happened in the session as a story: what we set out to do, what problems we hit, how we solved them, and where things stand now. Keep it 4–8 sentences, natural and readable.
 3. **Commit and push** to the projects repo
 4. **Ask the user** before creating any Todoist tasks. Propose tasks for remaining work (format: `[project-name] Task description`) but wait for explicit approval before adding them
 5. Clear context and start a new session automatically

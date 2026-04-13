@@ -22,12 +22,30 @@ router.get("/read/*path", (req, res) => {
   const parts = req.params.path;
   const relativePath = Array.isArray(parts) ? parts.join("/") : parts;
   const { projectsDir } = getConfig();
-  const absolutePath = resolve(projectsDir, relativePath);
 
-  // Path traversal protection
-  if (!absolutePath.startsWith(projectsDir)) {
-    return res.status(403).json({ error: "Path traversal blocked" });
+  // Support _commands/ prefix for files in the commands directory
+  let absolutePath: string;
+  if (relativePath.startsWith("_commands/")) {
+    const commandFile = relativePath.slice("_commands/".length);
+    absolutePath = resolve(projectsDir, "../commands", commandFile);
+    const commandsDir = resolve(projectsDir, "../commands");
+    if (!absolutePath.startsWith(commandsDir)) {
+      return res.status(403).json({ error: "Path traversal blocked" });
+    }
+  } else if (relativePath.startsWith("_help/")) {
+    const helpFile = relativePath.slice("_help/".length);
+    absolutePath = resolve(projectsDir, "../panel/help", helpFile);
+    const helpDir = resolve(projectsDir, "../panel/help");
+    if (!absolutePath.startsWith(helpDir)) {
+      return res.status(403).json({ error: "Path traversal blocked" });
+    }
+  } else {
+    absolutePath = resolve(projectsDir, relativePath);
+    if (!absolutePath.startsWith(projectsDir)) {
+      return res.status(403).json({ error: "Path traversal blocked" });
+    }
   }
+
   if (!existsSync(absolutePath)) {
     return res.status(404).json({ error: "File not found" });
   }
