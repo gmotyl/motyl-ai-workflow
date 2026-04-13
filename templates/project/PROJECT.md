@@ -1,37 +1,54 @@
 # {{PROJECT_NAME}}
 
-**Type:** {{PROJECT_TYPE}} (personal/work/freelance)
-**Provider:** {{PROVIDER}}
-**Created:** {{DATE}}
-**Team:** {{TEAM}}
+> Last updated: {{DATE}}
 
-## Overview
+## Project Overview
 
-[Brief description of the project]
+[Brief 2-3 sentence description of the project. Update as new context emerges.]
 
-## Folder Structure
+## Repositories
 
-- `notes/` - Session notes, decisions, discussions
-- `progress/` - Session tracking
-- `.agent/` - AI provider configuration
-- `PROJECT.md` - This file
-- `DECISIONS.md` - Key architectural decisions
+- `path` — remote URL
 
-## Getting Started
+## Team
 
-1. Review `DECISIONS.md` for architectural decisions
-2. Check `progress/` for session history
-3. Start using your configured AI provider
+| Name | Role | Notes |
+|------|------|-------|
+| Greg | Lead/PM | Main point of contact |
 
-## Provider
+## Key Decisions
 
-Configured provider: `{{PROVIDER}}`
+| Date | Decision | Context |
+|------|----------|---------|
+| {{DATE}} | [Decision made] | [Why/context] |
 
-To switch providers:
-1. Update `.agent/config.json`
-2. Run corresponding setup script
-3. Continue working
+See [DECISIONS.md](./DECISIONS.md) for full history.
+
+## Technology Stack
+
+- **[Tech]** — [how it's used]
+
+## Current Focus Areas
+
+- [Active workstream 1 — brief status]
+
+Active plans: see [plans/CURRENT.md](./plans/CURRENT.md)
+
+## Open Questions / Blockers
+
+- [ ] [Truly unresolved question or blocker]
+
+See [_index.json](./_index.json) for full notes index.
 
 ---
 
-Update this file as the project evolves.
+### Compact Rules
+
+Keep this file as a quick-reference document, not a log:
+- **Team notes:** Max 1 short sentence per person (current role/focus only)
+- **Key Decisions:** Last 5 only; older ones stay in DECISIONS.md
+- **Current Focus:** Replace entirely each update — max 7 items, no historical
+- **Open Questions:** Only truly unresolved — max 10. Remove stale items.
+- **No Notes Index** — use `_index.json`
+- **No task-specific sections** — those belong in individual notes
+- **No ephemeral data** (team availability, holiday schedules)
