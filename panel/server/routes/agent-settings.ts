@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { existsSync, readFileSync, statSync } from "fs";
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "fs";
 import { homedir } from "os";
 import { resolve } from "path";
 
@@ -11,6 +11,7 @@ interface SettingsFile {
   exists: boolean;
   size?: number;
   modified?: number;
+  editable?: boolean;
 }
 
 interface AgentConfig {
@@ -19,16 +20,29 @@ interface AgentConfig {
   files: SettingsFile[];
 }
 
-function probe(name: string, absPath: string): SettingsFile {
+function probe(name: string, absPath: string, editable = false): SettingsFile {
   const exists = existsSync(absPath);
   if (!exists) return { name, path: absPath, exists };
   const stat = statSync(absPath);
-  return { name, path: absPath, exists, size: stat.size, modified: stat.mtimeMs };
+  return { name, path: absPath, exists, size: stat.size, modified: stat.mtimeMs, ...(editable && { editable }) };
+}
+
+function probeDir(dirPath: string, ext: string, editable = false): SettingsFile[] {
+  if (!existsSync(dirPath)) return [];
+  try {
+    return readdirSync(dirPath)
+      .filter((f) => f.endsWith(ext))
+      .map((f) => probe(f, resolve(dirPath, f), editable));
+  } catch {
+    return [];
+  }
 }
 
 const home = homedir();
 
 function getAgentConfigs(): AgentConfig[] {
+  const opencodeAgents = probeDir(resolve(home, ".config/opencode/agents"), ".md", true);
+
   return [
     {
       agent: "Claude Code",
@@ -46,6 +60,7 @@ function getAgentConfigs(): AgentConfig[] {
       files: [
         probe("ocx.jsonc", resolve(home, ".config/opencode/ocx.jsonc")),
         probe("opencode.json", resolve(home, ".config/opencode/opencode.json")),
+        ...opencodeAgents,
       ].filter((f) => f.exists),
     },
     {
@@ -93,6 +108,23 @@ router.get("/read", (req, res) => {
 
   const content = readFileSync(resolved, "utf-8");
   res.json({ path: resolved, content });
+});
+
+router.post("/write", (req, res) => {
+  const { path: filePath, content } = req.body as { path?: string; content?: string };
+  if (!filePath || content == null) return res.status(400).json({ error: "Missing path or content" });
+
+  const resolved = resolve(filePath);
+  if (!resolved.startsWith(home)) {
+    return res.status(403).json({ error: "Path outside home directory" });
+  }
+  if (!existsSync(resolved)) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  writeFileSync(resolved, content, "utf-8");
+  const stat = statSync(resolved);
+  res.json({ path: resolved, size: stat.size, modified: stat.mtimeMs });
 });
 
 export default router;

@@ -1,35 +1,61 @@
 import { Router } from "express";
-import { execFile } from "child_process";
-import { homedir } from "os";
-import { join } from "path";
+import { getConfig } from "../config.js";
+import { getFileIndex } from "../lib/file-index.js";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 
 const router = Router();
 
-const home = homedir();
-const PATH = [
-  join(home, ".bun/bin"),
-  join(home, ".nvm/versions/node/v24.7.0/bin"),
-  "/usr/local/bin",
-  "/usr/bin",
-  "/bin",
-].join(":");
+interface SearchMatch {
+  line: number;
+  text: string;
+}
 
-router.get("/qmd", (req, res) => {
+interface SearchResult {
+  relativePath: string;
+  project: string;
+  matches: SearchMatch[];
+}
+
+router.get("/grep", (req, res) => {
   const query = req.query.q as string;
-  const collection = req.query.collection as string | undefined;
+  if (!query || query.length < 2) return res.json([]);
 
-  if (!query) return res.status(400).json({ error: "Missing q parameter" });
+  const project = req.query.project as string | undefined;
+  const { projectsDir } = getConfig();
+  const allFiles = getFileIndex();
+  const files = project ? allFiles.filter((f) => f.project === project) : allFiles;
+  const results: SearchResult[] = [];
+  const lowerQuery = query.toLowerCase();
+  const maxResults = 20;
+  const maxMatchesPerFile = 3;
 
-  const args = ["query", query];
-  if (collection) args.push("--collection", collection);
+  for (const file of files) {
+    if (results.length >= maxResults) break;
+    // Only search text files
+    if (!file.relativePath.match(/\.(md|txt|json|ts|tsx|js|jsx|yaml|yml|toml)$/)) continue;
 
-  execFile("qmd", args, { encoding: "utf-8", timeout: 15_000, env: { ...process.env, PATH } }, (err, stdout, _stderr) => {
-    if (err && !stdout) {
-      return res.status(500).json({ error: "qmd query failed", details: err.message });
+    try {
+      const absPath = resolve(projectsDir, file.relativePath);
+      const content = readFileSync(absPath, "utf-8");
+      const lines = content.split("\n");
+      const matches: SearchMatch[] = [];
+
+      for (let i = 0; i < lines.length && matches.length < maxMatchesPerFile; i++) {
+        if (lines[i].toLowerCase().includes(lowerQuery)) {
+          matches.push({ line: i + 1, text: lines[i].trim().slice(0, 200) });
+        }
+      }
+
+      if (matches.length > 0) {
+        results.push({ relativePath: file.relativePath, project: file.project, matches });
+      }
+    } catch {
+      // skip unreadable files
     }
-    // qmd may exit non-zero but still produce useful stdout — return it
-    res.type("text/plain").send(stdout);
-  });
+  }
+
+  res.json(results);
 });
 
 export default router;

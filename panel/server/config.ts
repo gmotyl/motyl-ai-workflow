@@ -19,6 +19,9 @@ export async function loadConfig(): Promise<PanelConfig> {
       console.warn("Failed to load panel.config.local.ts, using defaults:", e);
     }
   }
+  // Env vars override config file for TLS paths
+  if (process.env.PANEL_TLS_CERT) config.tlsCert = process.env.PANEL_TLS_CERT;
+  if (process.env.PANEL_TLS_KEY) config.tlsKey = process.env.PANEL_TLS_KEY;
   return config;
 }
 

@@ -3,17 +3,72 @@ import { WebSocketServer, WebSocket } from "ws";
 import { Server } from "http";
 import { getConfig } from "./config.js";
 import { rebuildIndex } from "./lib/file-index.js";
+import { getSession, resizeSession } from "./lib/terminal-manager.js";
+import { validateWsToken } from "./lib/auth.js";
 
 let wss: WebSocketServer;
 
 export function setupWebSocket(server: Server): WebSocketServer {
   wss = new WebSocketServer({ server });
 
-  wss.on("connection", (ws) => {
+  wss.on("connection", (ws, req) => {
+    if (!validateWsToken(req.headers.cookie)) {
+      ws.close(4001, "Unauthorized");
+      return;
+    }
+
+    const url = req.url || "";
+    const termMatch = url.match(/^\/ws\/terminal\/(.+)$/);
+
+    if (termMatch) {
+      attachTerminalSocket(ws, termMatch[1]);
+      return;
+    }
+
+    // Broadcast subscription connection (file-change, agent-change)
     ws.send(JSON.stringify({ type: "connected" }));
   });
 
   return wss;
+}
+
+function attachTerminalSocket(ws: WebSocket, sessionId: string): void {
+  const session = getSession(sessionId);
+  if (!session) {
+    ws.close(4004, "Session not found");
+    return;
+  }
+
+  const dataSub = session.pty.onData((data) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: "output", data }));
+    }
+  });
+
+  const exitSub = session.pty.onExit(({ exitCode }) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: "exit", code: exitCode }));
+      ws.close();
+    }
+  });
+
+  ws.on("message", (raw) => {
+    try {
+      const msg = JSON.parse(raw.toString());
+      if (msg.type === "input" && typeof msg.data === "string") {
+        session.pty.write(msg.data);
+      } else if (msg.type === "resize") {
+        resizeSession(sessionId, Number(msg.cols), Number(msg.rows));
+      }
+    } catch {
+      // ignore malformed payloads
+    }
+  });
+
+  ws.on("close", () => {
+    dataSub.dispose();
+    exitSub.dispose();
+  });
 }
 
 export function broadcast(data: Record<string, unknown>): void {

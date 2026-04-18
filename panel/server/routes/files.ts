@@ -44,6 +44,14 @@ router.get("/read/*path", (req, res) => {
     if (!absolutePath.startsWith(projectsDir)) {
       return res.status(403).json({ error: "Path traversal blocked" });
     }
+    // Fallback: if not found in projectsDir, try repo root
+    if (!existsSync(absolutePath)) {
+      const repoRoot = resolve(projectsDir, "..");
+      const fallback = resolve(repoRoot, relativePath);
+      if (fallback.startsWith(repoRoot) && existsSync(fallback)) {
+        absolutePath = fallback;
+      }
+    }
   }
 
   if (!existsSync(absolutePath)) {
@@ -52,6 +60,33 @@ router.get("/read/*path", (req, res) => {
 
   const content = readFileSync(absolutePath, "utf-8");
   res.json({ path: relativePath, absolutePath, content });
+});
+
+// Serve raw files (images, etc.) with correct MIME type
+router.get("/raw/*path", (req, res) => {
+  const parts = req.params.path;
+  const relativePath = Array.isArray(parts) ? parts.join("/") : parts;
+  const { projectsDir } = getConfig();
+
+  let absolutePath = resolve(projectsDir, relativePath);
+  if (!absolutePath.startsWith(projectsDir)) {
+    return res.status(403).json({ error: "Path traversal blocked" });
+  }
+
+  // Fallback: if not found in projectsDir, try repo root
+  if (!existsSync(absolutePath)) {
+    const repoRoot = resolve(projectsDir, "..");
+    const fallback = resolve(repoRoot, relativePath);
+    if (fallback.startsWith(repoRoot) && existsSync(fallback)) {
+      absolutePath = fallback;
+    }
+  }
+
+  if (!existsSync(absolutePath)) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  res.sendFile(absolutePath);
 });
 
 // File tree for a specific project

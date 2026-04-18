@@ -16,6 +16,10 @@ export interface PanelConfig {
   watchDebounceMs: number;
   /** Glob patterns to ignore in file tree */
   ignorePatterns: string[];
+  /** Absolute path to TLS certificate (.pem) — enables HTTPS when set together with tlsKey */
+  tlsCert?: string;
+  /** Absolute path to TLS private key (.pem) — enables HTTPS when set together with tlsCert */
+  tlsKey?: string;
 }
 
 const defaults: PanelConfig = {

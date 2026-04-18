@@ -75,6 +75,60 @@ code, pre, .font-mono {
   pointer-events: none;
 }
 
+/* Mobile: sidebars become overlay drawers over the main content.
+   Main content keeps its width; drawers slide in/out via transform. */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 280px !important;
+    padding: initial !important;
+    opacity: 1 !important;
+    z-index: 40;
+    transform: translateX(0);
+    transition:
+      transform var(--transition-sidebar),
+      box-shadow var(--transition-sidebar);
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.45);
+    border-right: 1px solid var(--border-subtle);
+    border-left: none;
+  }
+  .sidebar.sidebar-left {
+    left: 0;
+  }
+  .sidebar.sidebar-right {
+    left: auto;
+    right: 0;
+    border-left: 1px solid var(--border-subtle);
+    border-right: none;
+  }
+  .sidebar.sidebar-collapsed {
+    pointer-events: none;
+    box-shadow: none;
+  }
+  .sidebar.sidebar-left.sidebar-collapsed {
+    transform: translateX(-100%);
+  }
+  .sidebar.sidebar-right.sidebar-collapsed {
+    transform: translateX(100%);
+  }
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 35;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-sidebar);
+}
+.sidebar-backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Sidebar toggle buttons */
 .sidebar-toggle {
   position: absolute;
@@ -154,4 +208,72 @@ input[type="checkbox"] {
 .file-tree-active {
   scroll-margin-top: 80px;
   scroll-margin-bottom: 40px;
+}
+
+/* Terminal activity LED — tri-state:
+     idle       → dim mustard (quiet)
+     busy       → light green + soft pulse (pty is emitting)
+     attention  → coral red + faster pulse (reserved for Claude hooks)
+   State is set via data-state on the element. */
+@keyframes terminal-led-pulse-busy {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(158, 206, 106, 0.55);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(158, 206, 106, 0);
+    opacity: 0.9;
+  }
+}
+
+@keyframes terminal-led-pulse-attention {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(247, 118, 142, 0.7);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(247, 118, 142, 0);
+    opacity: 0.8;
+  }
+}
+
+.terminal-led {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6b5a20;
+  transition:
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.terminal-led[data-state="busy"] {
+  background: #9ece6a;
+  animation: terminal-led-pulse-busy 1.2s ease-in-out infinite;
+}
+
+.terminal-led[data-state="attention"] {
+  background: #f7768e;
+  animation: terminal-led-pulse-attention 0.8s ease-in-out infinite;
+}
+
+.terminal-led-lg {
+  width: 8px;
+  height: 8px;
+}
+
+/* Mobile: let xterm own vertical swipe for scrollback; keep the browser
+   from stealing the gesture for page scroll, pull-to-refresh, or the
+   iOS/Android back swipe. */
+.xterm,
+.xterm .xterm-viewport,
+.xterm .xterm-screen {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+.xterm .xterm-viewport {
+  -webkit-overflow-scrolling: touch;
 }
